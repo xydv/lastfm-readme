@@ -1,11 +1,11 @@
 #:schema node_modules/wrangler/config-schema.json
-name = "lastreadme"
+name = "lastfm"
 main = "src/index.ts"
-compatibility_date = "2024-11-12"
+compatibility_date = "2025-04-14"
 compatibility_flags = ["nodejs_compat"]
 
 [observability]
-enabled = true
+enabled = false
 
 [vars]
 LASTFM_APIKEY = ""

@@ -1,16 +1,21 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { html, raw } from 'hono/html';
-import { generateBars, getSongData, paramValidator, queryValidator } from './helpers';
+import { generateBars, querySchema } from './helpers';
+import { zValidator } from '@hono/zod-validator';
+import { z } from 'zod';
+import { getSongData } from './services/lastFm';
 
 const app = new Hono<{ Bindings: Env }>();
 
+const DEFAULT_IMAGE = 'https://origin-www.thecurrent.org/images/default-album-art.png';
+
 app.use(cors());
 
-app.get('/:username', paramValidator, queryValidator, async (c) => {
+app.get('/:username', zValidator('param', z.object({ username: z.string() })), zValidator('query', querySchema), async (c) => {
 	const { username } = c.req.valid('param');
-	const { dark, spin, color, rainbow } = c.req.valid('query');
-	const { name, url, artist, image } = await getSongData(username, c.env.LASTFM_APIKEY);
+	const { dark, spin, color, rainbow, useDominantColor } = c.req.valid('query');
+	const { name, url, artist, image, dominantColor } = await getSongData(username, c.env.LASTFM_APIKEY, DEFAULT_IMAGE);
 
 	// template from: https://github.com/tthn0/Spotify-Readme
 	return c.body(
@@ -131,7 +136,7 @@ app.get('/:username', paramValidator, queryValidator, async (c) => {
 									</div>
 									<p>${artist}</p>
 								</div>
-								<div class="bar-container">${raw(generateBars(rainbow, color))}</div>
+								<div class="bar-container">${raw(generateBars(rainbow, useDominantColor ? dominantColor : color))}</div>
 							</section>
 						</main>
 					</a>
@@ -142,13 +147,13 @@ app.get('/:username', paramValidator, queryValidator, async (c) => {
 		{
 			'cache-control': 'max-age=0, no-cache, no-store, must-revalidate',
 			'content-type': 'image/svg+xml',
-		}
+		},
 	);
 });
 
-app.get('/open/:username', paramValidator, async (c) => {
+app.get('/open/:username', zValidator('param', z.object({ username: z.string() })), async (c) => {
 	const { username } = c.req.valid('param');
-	const { url } = await getSongData(username, c.env.LASTFM_APIKEY);
+	const { url } = await getSongData(username, c.env.LASTFM_APIKEY, DEFAULT_IMAGE);
 	return c.redirect(url);
 });
 

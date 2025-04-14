@@ -1,18 +1,10 @@
 import { z } from 'zod';
 import axios from 'axios';
-// import imagejs from 'image-js';
+import imagejs from 'image-js';
 import { Buffer } from 'node:buffer';
-import { zValidator } from '@hono/zod-validator';
-
-type Song = {
-	name: string;
-	artist: string;
-	url: string;
-	image: string;
-};
 
 // from: https://github.com/tthn0/Spotify-Readme
-const spectrum: string[] = [
+const rainbowSpectrum: string[] = [
 	'#ff0000',
 	'#ff4000',
 	'#ff8000',
@@ -44,52 +36,38 @@ export function generateBars(isRainbow: boolean, color: string, count: number = 
 	for (let i = 0; i < count; i++) {
 		bars += "<div class='bar'></div>";
 		css += `.bar:nth-child(${i + 1}) { animation-duration: ${Math.floor(Math.random() * 251) + 500}ms; background: ${
-			isRainbow ? spectrum[i] : `#${color}`
+			isRainbow ? rainbowSpectrum[i] : `#${color}`
 		}; }`;
 	}
 	return `${bars}<style>${css}</style>`;
 }
 
-// from: https://github.com/tthn0/Spotify-Readme
+// from: https://github.com/tthn0/Spotify-Readme, add error handling
 export async function imageToBase64(imageUrl: string): Promise<string> {
 	const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
 	return Buffer.from(response.data).toString('base64');
 }
 
-// todo: add default color when image is not found (star type image)
-// export async function getDominantColor(base64Image: string): Promise<string> {
-// 	const image = await imagejs.load(Buffer.from(base64Image, 'base64'));
-// 	const [r, g, b] = image.getHistograms();
-// 	return ((1 << 24) + (r.indexOf(Math.max(...r)) << 16) + (g.indexOf(Math.max(...g)) << 8) + b.indexOf(Math.max(...b)))
-// 		.toString(16)
-// 		.slice(1);
-// }
-
-export async function getSongData(username: string, apiKey: string): Promise<Song> {
-	const { data } = await axios.get(
-		`https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${username}&api_key=${apiKey}&limit=1&format=json&})`
-	);
-
-	const track = data.recenttracks.track[0];
-
-	return {
-		name: track.name,
-		artist: track.artist['#text'],
-		url: track.url,
-		image: await imageToBase64(track.image[3]['#text']),
-	} as Song;
+export async function getDominantColor(base64Image: string): Promise<string> {
+	const image = await imagejs.load(Buffer.from(base64Image, 'base64'));
+	const [r, g, b] = image.getHistograms();
+	return ((1 << 24) + (r.indexOf(Math.max(...r)) << 16) + (g.indexOf(Math.max(...g)) << 8) + b.indexOf(Math.max(...b)))
+		.toString(16)
+		.slice(1);
 }
 
-// validation schemas
+// zod schemas
 const booleanSchema = z
 	.string()
 	.optional()
 	.transform((val) => val != undefined);
 
-const colorSchema = z.string().min(3).max(8).optional().default('d51007'); // lastfm logo color
+const colorSchema = z.string().min(3).max(8).optional().default('d51007');
 
-export const paramValidator = zValidator('param', z.object({ username: z.string() }));
-export const queryValidator = zValidator(
-	'query',
-	z.object({ dark: booleanSchema, spin: booleanSchema, rainbow: booleanSchema, color: colorSchema })
-);
+export const querySchema = z.object({
+	dark: booleanSchema,
+	spin: booleanSchema,
+	rainbow: booleanSchema,
+	useDominantColor: booleanSchema,
+	color: colorSchema,
+});

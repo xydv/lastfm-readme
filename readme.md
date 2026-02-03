@@ -12,7 +12,7 @@ https://lastfm.dedomil.workers.dev
 /<username>
 ```
 
-![Preview](https://lastfm.dedomil.workers.dev/adbtya)
+![Preview](https://lastfm.dedomil.workers.dev/xydv)
 
 #### Spinning CD Effect
 
@@ -20,7 +20,7 @@ https://lastfm.dedomil.workers.dev
 /<username>?spin
 ```
 
-![Preview](https://lastfm.dedomil.workers.dev/adbtya?spin)
+![Preview](https://lastfm.dedomil.workers.dev/xydv?spin)
 
 #### Dark Theme
 
@@ -28,7 +28,7 @@ https://lastfm.dedomil.workers.dev
 /<username>?dark
 ```
 
-![Preview](https://lastfm.dedomil.workers.dev/adbtya?dark)
+![Preview](https://lastfm.dedomil.workers.dev/xydv?dark)
 
 #### Custom Theme
 
@@ -36,7 +36,7 @@ https://lastfm.dedomil.workers.dev
 /<username>?color=<hex-color-without-hash>
 ```
 
-![Preview](https://lastfm.dedomil.workers.dev/adbtya?color=00ff00)
+![Preview](https://lastfm.dedomil.workers.dev/xydv?color=00ff00)
 
 #### Rainbow Equalizer
 
@@ -44,7 +44,7 @@ https://lastfm.dedomil.workers.dev
 /<username>?rainbow
 ```
 
-![Preview](https://lastfm.dedomil.workers.dev/adbtya?rainbow)
+![Preview](https://lastfm.dedomil.workers.dev/xydv?rainbow)
 
 #### Combination
 
@@ -52,7 +52,7 @@ https://lastfm.dedomil.workers.dev
 /<username>?dark&spin&rainbow
 ```
 
-![Preview](https://lastfm.dedomil.workers.dev/adbtya?dark&spin&rainbow)
+![Preview](https://lastfm.dedomil.workers.dev/xydv?dark&spin&rainbow)
 
 ## Special Thanks
 

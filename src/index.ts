@@ -8,7 +8,7 @@ import { getSongData } from './services/lastFm';
 
 const app = new Hono<{ Bindings: Env }>();
 
-const DEFAULT_IMAGE = 'https://origin-www.thecurrent.org/images/default-album-art.png';
+const DEFAULT_IMAGE = 'https://images.aditya.stream/lastfm.png';
 
 app.use(cors());
 
